@@ -8,14 +8,28 @@ function NavbarMenu(): React.ReactNode {
     const element = document.getElementById(id);
     const offset = 45;
     const bodyRect = document.body.getBoundingClientRect().top;
-    const elementRect = element?.getBoundingClientRect().top || 100;
+    const elementRect = element?.getBoundingClientRect().top || 0;
     const elementPosition = elementRect - bodyRect;
     const offsetPosition = elementPosition - offset;
+    if (isHamburger()) {
+      setIsOpen(false);
+      setTimeout(() => {
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }, 550);
+    } else {
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  }
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth',
-    });
+  function isHamburger(): boolean {
+    const width = document.body.getBoundingClientRect().width;
+    return width < 1024;
   }
 
   return (
@@ -51,10 +65,7 @@ function NavbarMenu(): React.ReactNode {
         </li>
       </ul>
       <div className="block lg:hidden">
-        <Hamburger
-          rounded
-          onToggle={(toggled: boolean) => setIsOpen(toggled)}
-        />
+        <Hamburger rounded toggle={setIsOpen} toggled={isOpen} />
       </div>
     </div>
   );
